@@ -3,7 +3,7 @@ from django.db import models
 
 class Pokemon(models.Model):
     title = models.CharField('Имя покемона', max_length=200)
-    photo = models.ImageField('Изображение покемона', blank=True)
+    photo = models.ImageField('Изображение покемона', blank=True, default=None)
     appear = models.DateTimeField('Появиться', blank=True, null=True)
     disappear = models.DateTimeField('Исчезнет', blank=True, null=True)
     leve = models.IntegerField('Уровень', blank=True, null=True)
@@ -21,5 +21,5 @@ class PokemonEntity(models.Model):
         Pokemon,
         verbose_name='Выберите покемона',
         on_delete=models.CASCADE)
-    lat = models.FloatField('Широта')
-    lon = models.FloatField('Долгота')
+    lat = models.FloatField('Широта', blank=True)
+    lon = models.FloatField('Долгота', blank=True)
