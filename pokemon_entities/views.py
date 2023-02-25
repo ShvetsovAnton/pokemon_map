@@ -82,6 +82,8 @@ def show_pokemon(request, pokemon_id):
             'pokemon_id': pokemon.id,
             'img_url': request.build_absolute_uri(pokemon.photo.url),
             'title_ru': pokemon.title,
+            "title_en": "Venusaur",
+            "title_jp": "フシギバナ",
             'description': pokemon.description
         }
     })

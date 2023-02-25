@@ -2,7 +2,9 @@ from django.db import models
 
 
 class Pokemon(models.Model):
-    title = models.CharField('Имя покемона', max_length=200)
+    title = models.CharField('Имя покемона RU', max_length=200, default='')
+    title_eng = models.CharField('Имя покемона ENG', max_length=200, default='')
+    title_jp = models.CharField('Имя покемона JP', max_length=200, default='')
     photo = models.ImageField('Изображение покемона', blank=True, default=None)
     appear = models.DateTimeField('Появиться', blank=True, null=True)
     disappear = models.DateTimeField('Исчезнет', blank=True, null=True)
