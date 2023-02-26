@@ -62,37 +62,59 @@ def take_pokemon_description(request, pokemon):
             }
         }
     except AttributeError:
-        pokemon_description = {
-            'pokemon_id': pokemon.id,
-            'img_url': request.build_absolute_uri(pokemon.photo.url),
-            'title_ru': pokemon.title,
-            "title_en": pokemon.title_eng,
-            "title_jp": pokemon.title_jp,
-            'description': pokemon.description,
-            "next_evolution": {
-                "title_ru": next_evolutions_stage.title,
-                "pokemon_id": next_evolutions_stage.id,
-                "img_url": request.build_absolute_uri(
-                    next_evolutions_stage.photo.url
-                )
+        try:
+            pokemon_description = {
+                'pokemon_id': pokemon.id,
+                'img_url': request.build_absolute_uri(pokemon.photo.url),
+                'title_ru': pokemon.title,
+                "title_en": pokemon.title_eng,
+                "title_jp": pokemon.title_jp,
+                'description': pokemon.description,
+                "next_evolution": {
+                    "title_ru": next_evolutions_stage.title,
+                    "pokemon_id": next_evolutions_stage.id,
+                    "img_url": request.build_absolute_uri(
+                        next_evolutions_stage.photo.url
+                    )
+                }
             }
-        }
+        except AttributeError:
+            pokemon_description = {
+                'pokemon_id': pokemon.id,
+                'img_url': request.build_absolute_uri(pokemon.photo.url),
+                'title_ru': pokemon.title,
+                "title_en": pokemon.title_eng,
+                "title_jp": pokemon.title_jp,
+                'description': pokemon.description
+            }
+            return pokemon_description
     except Pokemon.DoesNotExist:
-        pokemon_description = {
-            'pokemon_id': pokemon.id,
-            'img_url': request.build_absolute_uri(pokemon.photo.url),
-            'title_ru': pokemon.title,
-            "title_en": pokemon.title_eng,
-            "title_jp": pokemon.title_jp,
-            'description': pokemon.description,
-            "previous_evolution": {
-                "title_ru": previous_evolution_stage.title,
-                "pokemon_id": previous_evolution_stage.id,
-                "img_url": request.build_absolute_uri(
-                    previous_evolution_stage.photo.url
-                )
+        try:
+            pokemon_description = {
+                'pokemon_id': pokemon.id,
+                'img_url': request.build_absolute_uri(pokemon.photo.url),
+                'title_ru': pokemon.title,
+                "title_en": pokemon.title_eng,
+                "title_jp": pokemon.title_jp,
+                'description': pokemon.description,
+                "previous_evolution": {
+                    "title_ru": previous_evolution_stage.title,
+                    "pokemon_id": previous_evolution_stage.id,
+                    "img_url": request.build_absolute_uri(
+                        previous_evolution_stage.photo.url
+                    )
+                }
             }
-        }
+        except AttributeError:
+            pokemon_description = {
+                'pokemon_id': pokemon.id,
+                'img_url': request.build_absolute_uri(pokemon.photo.url),
+                'title_ru': pokemon.title,
+                "title_en": pokemon.title_eng,
+                "title_jp": pokemon.title_jp,
+                'description': pokemon.description
+            }
+            return pokemon_description
     except Pokemon.MultipleObjectsReturned:
         raise Pokemon.MultipleObjectsReturned(
             'Покемон может эволюционировать только в одну особь.'
@@ -115,21 +137,21 @@ def add_pokemon(folium_map, lat, lon, image_url=DEFAULT_IMAGE_URL):
 
 
 def show_all_pokemons(request):
+    pokemons_on_page = []
     folium_map = folium.Map(location=MOSCOW_CENTER, zoom_start=12)
-    pokemons = Pokemon.objects.exclude(photo=None).filter(
+    pokemons_with_image = Pokemon.objects.filter(
         appear__lte=now(),
         disappear__gte=now()
     ).select_related()
-    for pokemon in pokemons:
+    for pokemon in pokemons_with_image:
+        print(pokemon)
         take_pokemon_entity(pokemon, request, folium_map)
-    pokemons_on_page = []
-    for pokemon in pokemons:
+    for pokemon in pokemons_with_image:
         pokemons_on_page.append({
             'pokemon_id': pokemon.id,
             'img_url': request.build_absolute_uri(pokemon.photo.url),
             'title_ru': pokemon.title,
         })
-
     return render(request, 'mainpage.html', context={
         'map': folium_map._repr_html_(),
         'pokemons': pokemons_on_page,
