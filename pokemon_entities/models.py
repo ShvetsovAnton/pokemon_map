@@ -2,6 +2,14 @@ from django.db import models
 
 
 class Pokemon(models.Model):
+    previous_evolution = models.ForeignKey(
+        'self',
+        verbose_name='Из кого эволюционировал',
+        on_delete=models.CASCADE,
+        related_name='next_evolutions',
+        null=True,
+        blank=True
+    )
     title = models.CharField('Имя покемона RU', max_length=200, default='')
     title_eng = models.CharField('Имя покемона ENG', max_length=200, default='')
     title_jp = models.CharField('Имя покемона JP', max_length=200, default='')
