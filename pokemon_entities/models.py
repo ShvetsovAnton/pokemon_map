@@ -2,6 +2,7 @@ from django.db import models
 
 
 class Pokemon(models.Model):
+    """Покемон"""
     previous_evolution = models.ForeignKey(
         'self',
         verbose_name='Из кого эволюционировал',
@@ -28,9 +29,13 @@ class Pokemon(models.Model):
 
 
 class PokemonEntity(models.Model):
+    """Координаты покемонов, привязаны к покемону"""
     pokemon = models.ForeignKey(
         Pokemon,
         verbose_name='Выберите покемона',
         on_delete=models.CASCADE)
     lat = models.FloatField('Широта', blank=True)
     lon = models.FloatField('Долгота', blank=True)
+
+    def __str__(self):
+        return f'Координаты: Широта - {self.lat}, Долгота - {self.lon}'
