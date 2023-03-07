@@ -6,7 +6,7 @@ class Pokemon(models.Model):
     previous_evolution = models.ForeignKey(
         'self',
         verbose_name='Из кого эволюционировал',
-        on_delete=models.CASCADE,
+        on_delete=models.SET_NULL,
         related_name='next_evolutions',
         blank=True,
         null=True
@@ -50,4 +50,4 @@ class PokemonEntity(models.Model):
     stamina = models.IntegerField('Выносливость', blank=True, null=True)
 
     def __str__(self):
-        return 'Информация о покемоне.'
+        return f'Информация о покемоне {self.pokemon.title_ru}'
