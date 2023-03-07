@@ -30,24 +30,6 @@ pip install -r requirements.txt
 python3 manage.py runserver
 ```
 
-#### Так же для запуска проекта также понадобиться заполнить обязательный данные в админке:
-
-В разделе "Pokemons":
-
-[![imageup.ru](https://imageup.ru/img277/4228158/chrome_iqklpjv2d9.png)](https://imageup.ru/img277/4228158/chrome_iqklpjv2d9.png.html)
-- Имя покемона RU
-- Имя покемона ENG
-- Имя покемона JP
-- Изображение покемона
-- Появиться
-- Исчезнет
-***
-В разделе "Pokemon entitys":
-
-[![imageup.ru](https://imageup.ru/img206/4228159/chrome_ifkooaezas.png)](https://imageup.ru/img206/4228159/chrome_ifkooaezas.png.html)
-- Широта
-- Долгота
-***
 ### Переменные окружения
 
 Часть настроек проекта берётся из переменных окружения. Чтобы их определить, создайте файл `.env` рядом с `manage.py` и запишите туда данные в таком формате: `ПЕРЕМЕННАЯ=значение`.
