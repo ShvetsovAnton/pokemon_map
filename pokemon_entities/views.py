@@ -31,16 +31,16 @@ def show_all_pokemons(request):
         appeared_at__lte=localtime,
         disappeared_at__gte=localtime
     )
-    for entity in pokemons_entities:
+    for entities in pokemons_entities:
         add_pokemon(
-            folium_map, entity.lat,
-            entity.lon,
-            request.build_absolute_uri(entity.pokemon.photo.url)
+            folium_map, entities.lat,
+            entities.lon,
+            request.build_absolute_uri(entities.pokemon.photo.url)
         )
         pokemons_on_page.append({
-            'pokemon_id': entity.pokemon.id,
-            'img_url': request.build_absolute_uri(entity.pokemon.photo.url),
-            'title_ru': entity.pokemon.title_ru,
+            'pokemon_id': entities.pokemon.id,
+            'img_url': request.build_absolute_uri(entities.pokemon.photo.url),
+            'title_ru': entities.pokemon.title_ru,
         })
     return render(request, 'mainpage.html', context={
         'map': folium_map._repr_html_(),
