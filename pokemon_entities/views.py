@@ -27,21 +27,20 @@ def show_all_pokemons(request):
     pokemons_on_page = []
     localtime = now()
     folium_map = folium.Map(location=MOSCOW_CENTER, zoom_start=12)
-    active_pokemons = Pokemon.objects.filter(
-        entities__appeared_at__lte=localtime,
-        entities__disappeared_at__gte=localtime
+    pokemons_entities = PokemonEntity.objects.filter(
+        appeared_at__lte=localtime,
+        disappeared_at__gte=localtime
     )
-    for pokemon in active_pokemons:
-        pokemon_entities = pokemon.entities.first()
+    for entity in pokemons_entities:
         add_pokemon(
-            folium_map, pokemon_entities.lat,
-            pokemon_entities.lon,
-            request.build_absolute_uri(pokemon.photo.url)
+            folium_map, entity.lat,
+            entity.lon,
+            request.build_absolute_uri(entity.pokemon.photo.url)
         )
         pokemons_on_page.append({
-            'pokemon_id': pokemon.id,
-            'img_url': request.build_absolute_uri(pokemon.photo.url),
-            'title_ru': pokemon.title_ru,
+            'pokemon_id': entity.pokemon.id,
+            'img_url': request.build_absolute_uri(entity.pokemon.photo.url),
+            'title_ru': entity.pokemon.title_ru,
         })
     return render(request, 'mainpage.html', context={
         'map': folium_map._repr_html_(),
@@ -64,26 +63,7 @@ def show_pokemon(request, pokemon_id):
         'title_jp': pokemon.title_jp,
         'description': pokemon.description
     }
-    if next_evol_stage_pokemon and previous_evol_stage_pokemon:
-        pokemon_description.update(
-            {
-                'previous_evolution': {
-                    'title_ru': previous_evol_stage_pokemon.title_ru,
-                    'pokemon_id': previous_evol_stage_pokemon.id,
-                    'img_url': request.build_absolute_uri(
-                        previous_evol_stage_pokemon.photo.url
-                    )
-                },
-                'next_evolution': {
-                    'title_ru': next_evol_stage_pokemon.title_ru,
-                    'pokemon_id': next_evol_stage_pokemon.id,
-                    'img_url': request.build_absolute_uri(
-                        next_evol_stage_pokemon.photo.url
-                    )
-                }
-            }
-        )
-    if next_evol_stage_pokemon and not previous_evol_stage_pokemon:
+    if next_evol_stage_pokemon:
         pokemon_description.update(
             {
                 'next_evolution': {
@@ -95,7 +75,7 @@ def show_pokemon(request, pokemon_id):
                 }
             }
         )
-    if previous_evol_stage_pokemon and not next_evol_stage_pokemon:
+    if previous_evol_stage_pokemon:
         pokemon_description.update(
             {
                 'previous_evolution': {
